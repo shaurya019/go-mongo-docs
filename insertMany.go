@@ -26,22 +26,20 @@ func main() {
     collection := client.Database("testdb").Collection("users")
 
     // Create a BSON document
-    user := bson.D{
-        {Key: "name", Value: "John Doe"},
-        {Key: "age", Value: 30},
-        {Key: "address", Value: bson.D{
-            {Key: "street", Value: "123 Main St"},
-            {Key: "city", Value: "New York"},
-        }},
-    }
-
-    // Insert a single document
-    insertResult, err := collection.InsertOne(context.TODO(), user)
+    users := []interface{}{
+		bson.D{{Key: "name", Value: "Alice"}, {Key: "age", Value: 25}},
+		bson.D{{Key: "name", Value: "Bob"}, {Key: "age", Value: 28}},
+	}
+	
+	insertManyResult, err := collection.InsertMany(context.TODO(), users)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)	
     if err != nil {
         log.Fatal(err)
     }
 
     fmt.Println("Inserted a single document: ", insertResult.InsertedID)
 }
-
-
